@@ -68,6 +68,44 @@ class BestaPlayer:
                     return False
         return True
 
+    def checkLines(self, player, inARow):
+        """
+        Implements function to check the current lines setup to evaluate best combinaison.
+
+        :param player: check for your numbers (your player number) or those of your opponent.
+        :param inARow: how many tokens in a row (3 or 2).
+        :return: true or false
+
+        """
+        count = 0
+        flag = False
+        for line_number, line in enumerate(self.grille):
+            count = 0
+            for car in line[:len(line) - 1]:
+                if int(car) == player and not flag:
+                    count = 1
+                    flag = True
+                elif int(car) == player and flag:
+                    count += 1
+                    if count == inARow:
+                        return True, line_number
+                else:
+                    count = 0
+        return False, 0
+
+    def changeColumnInLines(self):
+        """
+        Implements function to transform columns in lines to make tests eaiser.
+        :return: a reverse matrice
+        """
+        column = []
+        for x in xrange(7):
+            col = ''
+            for y in xrange(6):
+                col += self.grille[y][x]
+            column.append(col)
+        return column
+
     def checkColumn(self, player, inARow):
         """
         Implements function to check the current columns setup to evaluate best combinaison.
@@ -77,21 +115,23 @@ class BestaPlayer:
         :return: true or false
 
         """
+
+        column = self.changeColumnInLines()
         count = 0
         flag = False
-        for line in self.grille:
+        for col_number, line in enumerate(column):
             count = 0
-            for car in line[:len(line) - 1]:
+            for car in line:
                 if int(car) == player and not flag:
                     count = 1
                     flag = True
                 elif int(car) == player and flag:
                     count += 1
                     if count == inARow:
-                        return True
+                        return True, col_number
                 else:
                     count = 0
-        return False
+        return False, 0
 
     def decideColumn(self):
         """
@@ -106,5 +146,4 @@ class BestaPlayer:
 
 
 test = BestaPlayer('grille.txt')
-test.displayGrid()
 print test.checkColumn(test.player, 3)
