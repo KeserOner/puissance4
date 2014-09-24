@@ -82,9 +82,10 @@ class BestaPlayer:
         for line in self.grille:
             count = 0
             for car in line[:len(line) - 1]:
-                if car == player and not flag:
+                if int(car) == player and not flag:
                     count = 1
-                elif car == player and flag:
+                    flag = True
+                elif int(car) == player and flag:
                     count += 1
                     if count == inARow:
                         return True
