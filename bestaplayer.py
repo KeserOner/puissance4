@@ -81,17 +81,32 @@ class BestaPlayer:
         flag = False
         for line_number, line in enumerate(self.grille):
             count = 0
-            for car in line[:len(line) - 1]:
+            for car_pos, car in enumerate(line[:len(line) - 1]):
                 if int(car) == player and not flag:
                     count = 1
                     flag = True
                 elif int(car) == player and flag:
                     count += 1
                     if count == inARow:
-                        return True, line_number
+                        if car_pos - inARow >= 0 and self.canPlayLine(line_number, car_pos - inARow):
+                            return True, car_pos - inARow
+                        if car_pos + 1 <= 6 and self.canPlayLine(line_number, car_pos + 1):
+                            return True, car_pos + 1
                 else:
                     count = 0
         return False, 0
+
+    def canPlayLine(self, line, col):
+        """
+        Function to check if we can fill the line with a token.
+        :param line: which line
+        :param col: which column
+        :return: true or false
+        """
+        if line == 5:
+            return self.grille[line][col] == '0'
+        else:
+            return self.grille[line][col] == '0' and self.grille[line + 1][col] != '0'
 
     def changeColumnInLines(self):
         """
@@ -121,13 +136,13 @@ class BestaPlayer:
         flag = False
         for col_number, line in enumerate(column):
             count = 0
-            for car in line:
+            for car_pos, car in enumerate(line):
                 if int(car) == player and not flag:
                     count = 1
                     flag = True
                 elif int(car) == player and flag:
                     count += 1
-                    if count == inARow:
+                    if count == inARow and car_pos - inARow >= 0 and self.grille[car_pos - inARow][col_number] == '0':
                         return True, col_number
                 else:
                     count = 0
@@ -262,5 +277,6 @@ class BestaPlayer:
 
 
 
+
 test = BestaPlayer('grille.txt')
-print test.checkDiagonals(test.player, 3)
+print test.checkColumn(test.player, 3)
