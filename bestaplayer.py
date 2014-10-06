@@ -7,7 +7,7 @@ class BestaPlayer:
         self.fichier = fichier
         self.grille = self.getFirstGrid()
         self.best_hit = 0
-        self.player = self.whichPlayer()
+        self.players = self.whichPlayer()
 
     def getFirstGrid(self):
         """
@@ -54,8 +54,8 @@ class BestaPlayer:
             for line in fi.readlines():
                 for car in line[:len(line) - 1]:
                     if car != '0':
-                        return 2
-            return 1
+                        return 2, 1
+            return 1, 2
 
     def grilleEmpty(self):
         """
@@ -121,7 +121,7 @@ class BestaPlayer:
             column.append(col)
         return column
 
-    def checkColumn(self, player, inARow):
+    def checkColumns(self, player, inARow):
         """
         Implements function to check the current columns setup to evaluate best combinaison.
 
@@ -265,18 +265,39 @@ class BestaPlayer:
         else:
             return self.checkDiagonalRightToLeft(player, inARow)
 
+    def playSomeColumn(self, player, inARow):
+        """
+        Call all function for a player and a number of tokens given.
+        :param player: which player
+        :param inARow: how many token
+        :return: true or false (col number if true)
+        """
+        methods = {'checklines': self.checkLines, 'checkcolumn': self.checkColumns, 'checkdiagonal': self.checkDiagonals}
+        for key, function in methods.items():
+            which_col = function(player, inARow)
+            if which_col[0]:
+                return which_col
+        return False, 0
+
     def decideColumn(self):
         """
         Implements main function : to decide what is the better hit to do.
 
         :return: an int, representing the column where we play
         """
-
         if self.grilleEmpty():
             return 3
 
+        li_sequence = [3, 2, 1]
+        li_players = [self.players[0], self.players[1]]
+        for sequence in li_sequence:
+            for player in li_players:
+                choosen_col = self.playSomeColumn(player, sequence)
+                if choosen_col[0]:
+                    return choosen_col[1]
 
+        return 3
 
 
 test = BestaPlayer('grille.txt')
-print test.checkColumn(test.player, 3)
+print test.decideColumn()
