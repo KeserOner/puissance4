@@ -133,6 +133,123 @@ class BestaPlayer:
                     count = 0
         return False, 0
 
+    def checkDiagonalLeftToRight(self, player, inARow):
+        """
+        Implements function to check the current diagonal to evaluate best combinaison.
+
+        :param player: check for your numbers or opponent ones.
+        :param inARow:  how many tokens in a row (3 or 2).
+        :return:
+        """
+
+        x = 3
+        flag = False
+        while x < 6:
+            count = 0
+            x_int = x
+            y_int = 0
+            while x_int >= 0:
+                if int(self.grille[x_int][y_int]) == player and not flag:
+                    count = 1
+                    flag = True
+                elif int(self.grille[x_int][y_int]) == player and flag:
+                    count += 1
+                    if count == inARow and y_int + 1 <= 6 and x_int - 1 >= 0 and self.grille[x_int][y_int + 1] != '0':
+                        return True, y_int + 1
+                else:
+                    count = 0
+                    flag = False
+                x_int -= 1
+                y_int += 1
+            x += 1
+
+        y = 1
+        flag = False
+        while y <= 3:
+            count = 0
+            x_int = 5
+            y_int = y
+            while y_int <= 6 and x_int >= 0:
+                if int(self.grille[x_int][y_int]) == player and not flag:
+                    count = 1
+                    flag = True
+                elif int(self.grille[x_int][y_int]) == player and flag:
+                    count += 1
+                    if count == inARow and y_int + 1 <= 6 and x_int - 1 >= 0 and self.grille[x_int][y + 1] != '0':
+                        return True, y_int + 1
+                else:
+                    count = 0
+                    flage = False
+                x_int -= 1
+                y_int += 1
+            y += 1
+
+        return False, 0
+
+    def checkDiagonalRightToLeft(self, player, inARow):
+        """
+        Implements function to check the current diagonal to evaluate best combinaison.
+
+        :param player: check for your numbers or opponent ones.
+        :param inARow:  how many tokens in a row (3 or 2).
+        :return:
+        """
+
+        x = 3
+        flag = False
+        while x < 6:
+            count = 0
+            x_int = x
+            y_int = 6
+            while x_int >= 0:
+                if int(self.grille[x_int][y_int]) == player and not flag:
+                    count = 1
+                    flag = True
+                elif int(self.grille[x_int][y_int]) == player and flag:
+                    count += 1
+                    if count == inARow and y_int - 1 >= 0 and x_int - 1 >= 0 and self.grille[x_int][y_int - 1] != '0':
+                        return True, y_int - 1
+                else:
+                    count = 0
+                    flag = False
+                x_int -= 1
+                y_int -= 1
+            x += 1
+
+        y = 5
+        flag = False
+        while y <= 3:
+            count = 0
+            x_int = 5
+            y_int = y
+            while y_int >= 3 and x_int >= 0:
+                if int(self.grille[x_int][y_int]) == player and not flag:
+                    count = 1
+                    flag = True
+                elif int(self.grille[x_int][y_int]) == player and flag:
+                    count += 1
+                    if count == inARow and y_int - 1 >= 0 and x_int - 1 >= 0 and self.grille[x_int][y - 1] != '0':
+                        return True, y_int - 1
+                else:
+                    count = 0
+                    flage = False
+                x_int -= 1
+                y_int -= 1
+            y -= 1
+
+        return False, 0
+
+    def checkDiagonals(self, player, inARow):
+        """
+        Calls two diagonal functional.
+        :return: an int, representing the column where to play or 0 and False if there is no pattern search.
+        """
+        check = self.checkDiagonalLeftToRight(player, inARow)
+        if check[0]:
+            return check
+        else:
+            return self.checkDiagonalRightToLeft(player, inARow)
+
     def decideColumn(self):
         """
         Implements main function : to decide what is the better hit to do.
@@ -146,4 +263,4 @@ class BestaPlayer:
 
 
 test = BestaPlayer('grille.txt')
-print test.checkColumn(test.player, 3)
+print test.checkDiagonals(test.player, 3)
