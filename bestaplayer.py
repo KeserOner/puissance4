@@ -297,7 +297,3 @@ class BestaPlayer:
                     return choosen_col[1]
 
         return 3
-
-
-test = BestaPlayer('grille.txt')
-print test.decideColumn()
