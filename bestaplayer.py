@@ -37,13 +37,7 @@ class BestaPlayer:
                         j += 1
                     i += 1
 
-    def displayGrid(self):
-        """
-        Implements function to display the current grid of play.
 
-        """
-        for line in self.grille:
-            print ' '.join(line) + '\n'
 
     def whichPlayer(self):
         """
@@ -279,6 +273,16 @@ class BestaPlayer:
                 return which_col
         return False, 0
 
+    def findFirstColumnEmpty(self):
+        """
+        Implements function to get the first column where a slot remain.
+        :return: the column
+        """
+        for col in xrange(7):
+            if self.grille[0][col] == '0':
+                return col
+        return -1
+
     def decideColumn(self):
         """
         Implements main function : to decide what is the better hit to do.
@@ -296,4 +300,4 @@ class BestaPlayer:
                 if choosen_col[0]:
                     return choosen_col[1]
 
-        return 3
+        return self.findFirstColumnEmpty()
