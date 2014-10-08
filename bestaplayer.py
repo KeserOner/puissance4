@@ -3,11 +3,11 @@ __author__ = 'besta'
 
 class BestaPlayer:
 
-    def __init__(self, fichier):
+    def __init__(self, fichier, player):
         self.fichier = fichier
         self.grille = self.getFirstGrid()
         self.best_hit = 0
-        self.players = self.whichPlayer()
+        self.players = player
 
     def getFirstGrid(self):
         """
@@ -36,20 +36,6 @@ class BestaPlayer:
                         self.grille[i][j] = car
                         j += 1
                     i += 1
-
-
-
-    def whichPlayer(self):
-        """
-        Implement function to check if we are first or second player.
-
-        """
-        with open(self.fichier, 'r') as fi:
-            for line in fi.readlines():
-                for car in line[:len(line) - 1]:
-                    if car != '0':
-                        return 2, 1
-            return 1, 2
 
     def grilleEmpty(self):
         """
